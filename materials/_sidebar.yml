@@ -1,0 +1,16 @@
+website:
+  sidebar:
+    - title: "Materials"
+      collapse-level: 1
+      contents:
+        - materials.md
+        # Only edit from this line down
+        - section: "Foundations"
+          contents:
+            - materials/01-foundations/00-template.md
+        - section: "Prokaryotes"
+          contents:
+            - materials/02-prokaryotes/00-template.md
+        - section: "Eukaryotes"
+          contents:
+            - materials/03-eukaryotes/00-template.md

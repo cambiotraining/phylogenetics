@@ -195,7 +195,27 @@ Distance-based methods are popular thanks to their simplicity and computational 
 Infer a tree with NJ (to be completed...)
 
 
-## Phylogenetic inference - Maximum parsimony?
+## Phylogenetic inference - Maximum parsimony
+
+Maximum parsimony phylogenetic inference is based on the assumption that a tree that can explain the data (the alignment) requiring the fewest mutations is the preferable tree.
+
+### Tree search
+
+Maximum parsimony methods usually start from an initial tree, which can be estimated for example with NJ, and then try to iteratively improve the tree by attempting to decrease its parsimony score.
+The parsimony score is defined as the minimum number of mutations required by a tree to explain the alignment.
+One cannot attempt to evaluate all possible trees, because their number is typically too large, and this is why we use heuristic tree searches.
+
+To improve the tree, methods often perform small changes to the tree, and then evaluate the parsimony score of the modified tree.
+A type of change is "nearest neighbor interchange", where two nearby subtrees are swapped. Another is "subtree prune and regraft" when a subtree is removed from the tree and re-attached somewhere else.
+
+### Long branch attraction
+
+While maximum parsimony trees are generally regarded as useful, they are not exempt from biases. One of the most studied of these biases is "long branch attraction": when very long branches are present in the true tree, these branch tend to be biasedly clustered together in the inferred maximum parsimony trees. These biases are however not expected when studying short divergence data.
+
+### Maximum parsimony inference practical
+
+Infer a tree with maximum parsimony?
+
 
 
 
@@ -214,11 +234,7 @@ Model selection methods can select a substitution model for phylogenetic inferen
 
 ### Tree search
 
-Maximum likelihood methods start from an initial tree, which can be estimated for example with NJ, and then try to iteratively improve the tree by attempting to increase its likelihood score.
-One cannot attempt to evaluate all possible trees, because their number is typically too large, and this is why we use heuristic tree searches.
-
-To improve the tree likelihood, methods often perform small changes to the tree, and then evaluate the likelihood of the modified tree.
-A type of change is "nearest neighbor interchange", where two nearby subtrees are swapped. Another is "subtree prune and regraft" when a subtree is removed from the tree and re-attached somewhere else.
+Maximum likelihood methods, like maximum parsimony methods, start from an initial tree, and then try to iteratively improve it by attempting to increase its likelihood score typically via "nearest neighbor interchange" and "subtree prune and regraft" moves.
 
 It is not guarantee that these sets of move will lead us to find the maximum tree - we might instead land on a local maximum tree, one that is not optimal, but that we can't improve anymore with our set of moves.
 
@@ -228,7 +244,16 @@ It is not guarantee that these sets of move will lead us to find the maximum tre
 Infer a tree with maximum likelihood? Maybe also run model selection software?
 
 
-## Tree uncertainty - bootstrap and the like?
+## Tree uncertainty - bootstrap
+
+All the methods for phylogenetic inference that we discussed so far aim at estimating a single realistic tree, but they don't automatically tell us how confident we should be in the tree, or in individual branches of the tree.
+
+One common way to address this limitation is using the phylogenetic bootstrap approach (Felsenstein, 1985).
+This consist first in sampling a large number (say, 1000) of bootstrap alignments.
+Each of these alignments has the same size as the original alignment, and is obtained by sampling with replacement the columns of the original alignment; in each bootstrap alignment some of the columns of the original alignment will usually be absent, and some other columns would be represented multiple times.
+We then infer a bootstrap tree from each bootstrap alignment.
+Because the bootstrap alignments differ from each other and from the original alignment, the bootstrap trees might different between each other and from the original tree.
+The bootstrap support of a branch in the original tree is then defined as the proportion of times in which this branch is present in the bootstrap trees.
 
 
 ## Bayesian phylogenetic inference

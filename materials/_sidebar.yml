@@ -10,7 +10,11 @@ website:
             - materials/01-foundations/00-template.md
         - section: "Prokaryotes"
           contents:
-            - materials/02-prokaryotes/00-template.md
+            - materials/02-prokaryotes/2.1-know_your_bug.md
+            - materials/02-prokaryotes/2.2-alignments.md
+            - materials/02-prokaryotes/2.3-reference_picking.md
+            - materials/02-prokaryotes/2.4-TB_practical.md
+            - materials/02-prokaryotes/2.5-pneumo_practical.md
         - section: "Eukaryotes"
           contents:
             - materials/03-eukaryotes/00-template.md

@@ -7,7 +7,7 @@ website:
         # Only edit from this line down
         - section: "Foundations"
           contents:
-            - materials/01-foundations/00-template.md
+            - materials/01-foundations/00-foundations.md
         - section: "Prokaryotes"
           contents:
             - materials/02-prokaryotes/2.1-know_your_bug.md

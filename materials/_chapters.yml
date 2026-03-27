@@ -1,0 +1,6 @@
+book:
+  chapters:
+    - part: "Materials"
+      chapters:
+        - materials/01-foundations/00-foundations.md
+        - materials/01-foundations/02-msa.md

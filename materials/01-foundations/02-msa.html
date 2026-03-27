@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.112">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; Multiple Sequence Alignment</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../materials/01-foundations/00-foundations.html" rel="prev">
+<link href="../../site_libs/quarto-contrib/quarto-project/cambiotraining/courseformat/img/university-of-cambridge-favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../site_libs/quarto-contrib/quarto-project/cambiotraining/courseformat/img/university_crest_reversed.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Introduction to Phylogenetics</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/cambiotraining/phylogenetics"><i class="bi bi-github" role="img" aria-label="Bioinformatics Training Facility GitHub">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/bioinfocambs"><i class="bi bi-twitter" role="img" aria-label="Bioinformatics Training Facility Twitter">
+</i> 
+ </a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Sequence Alignment</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Welcome</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../setup.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data &amp; Setup</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Materials</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../materials/01-foundations/00-foundations.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Molecular Phylogenetics - an Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../materials/01-foundations/02-msa.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Sequence Alignment</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sequence-alignment" id="toc-sequence-alignment" class="nav-link active" data-scroll-target="#sequence-alignment"><span class="toc-section-number">4.1</span>  Sequence Alignment</a></li>
+  <li><a href="#alignment-inference" id="toc-alignment-inference" class="nav-link" data-scroll-target="#alignment-inference"><span class="toc-section-number">4.2</span>  Alignment Inference</a></li>
+  <li><a href="#msa-software" id="toc-msa-software" class="nav-link" data-scroll-target="#msa-software"><span class="toc-section-number">4.3</span>  MSA Software</a>
+  <ul class="collapse">
+  <li><a href="#mafft" id="toc-mafft" class="nav-link" data-scroll-target="#mafft"><span class="toc-section-number">4.3.1</span>  MAFFT</a></li>
+  <li><a href="#prank" id="toc-prank" class="nav-link" data-scroll-target="#prank"><span class="toc-section-number">4.3.2</span>  PRANK</a></li>
+  </ul></li>
+  <li><a href="#reference-based-alignment" id="toc-reference-based-alignment" class="nav-link" data-scroll-target="#reference-based-alignment"><span class="toc-section-number">4.4</span>  Reference-based Alignment</a></li>
+  <li><a href="#which-method" id="toc-which-method" class="nav-link" data-scroll-target="#which-method"><span class="toc-section-number">4.5</span>  Which Method?</a></li>
+  <li><a href="#protein-or-dna" id="toc-protein-or-dna" class="nav-link" data-scroll-target="#protein-or-dna"><span class="toc-section-number">4.6</span>  Protein or DNA?</a></li>
+  <li><a href="#alignment-visualisation" id="toc-alignment-visualisation" class="nav-link" data-scroll-target="#alignment-visualisation"><span class="toc-section-number">4.7</span>  Alignment Visualisation</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="toc-section-number">4.8</span>  Exercises</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="toc-section-number">4.9</span>  Summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Multiple Sequence Alignment</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Recognise the use of sequence alignments in phylogenetics.</li>
+<li>Understand what is a sequence alignment and how to estimate one.</li>
+<li>Distinguish between pairwise and multiple sequence alignment (MSA).</li>
+<li>Recognise the advantages and limitations of commonly used software for MSA.</li>
+<li>Perform and visualise MSA on a set of DNA or protein sequences.</li>
+</ul>
+</div>
+</div>
+<section id="sequence-alignment" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="sequence-alignment"><span class="header-section-number">4.1</span> Sequence Alignment</h2>
+<p>In molecular phylogenetics we use sequence data to infer trees. However, we first need to perform <strong>sequence alignment</strong>, so that <em>homologous</em> residues across the sequences are matched to each other. This is because homologous sequences across individuals/species can be of different lengths due to insertions/deletions. Therefore, without first aligning those sequences, it would be hard to infer the evolutionary patterns of change and reconstruct which substitutions occurred where.</p>
+<p>In essence, an alignment is a matrix containing one sequence per row. The rows of that matrix correspond to each sequence, and the columns to each residue (an aminoacid for protein sequences or a nucleotide for DNA sequences). To make the rows/sequences in the matrix of the same length, we add gap <code>-</code> characters. However, we can’t arbitrarily assign gap characters when performing sequence alignment, as this could lead to very inaccurate trees.</p>
+<p>For example, say we have sequences</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ATCG</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>CG</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>while this might be a reasonable alignment</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ATCG</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>--CG</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>this one is typically much more unlikely</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>A-TCG</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>-CG--</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Alignment methods are usually guided by one of two principles:</p>
+<ul>
+<li><strong>Evolutionary alignments</strong> want to place <em>homologous</em> characters in the same alignment column. Characters are homologous if they descended from the same ancestral character: while they might have been substituted with different characters, they have not been inserted. This is usually the same assumption made by phylogenetic methods when interpreting an alignment.</li>
+<li><strong>Structural alignments</strong> want similar characters to be in the same column, so it makes sense that two characters are in the same column even if they are not homologous, but if they have similar functions within the sequence.</li>
+</ul>
+<p>An evolutionary alignment represents an inference regarding the evolutionary sequence of the considered species, in particular regarding insertions and deletions. Phylogenetic inference methods usually don’t use insertion and deletion events to infer the tree, but they still assume that characters in the same alignment column are homologous.</p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+FASTA file format
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The main file format used to store nucleotide or amino acid sequences is called <strong>FASTA</strong>. The general structure of a FASTA file is illustrated below:</p>
+<pre><code>&gt;sample01                 &lt;-- NAME OF THE SEQUENCE
+AGCGTGTACTGTGCATGTCGATG   &lt;-- SEQUENCE ITSELF</code></pre>
+<p>Each sequence is represented by a name, which always starts with the character <code>&gt;</code>, followed by the actual sequence.</p>
+<p>A FASTA file can contain several sequences, for example:</p>
+<pre><code>&gt;sample01
+AGCGTGTACTGTGCATGTCGATG
+&gt;sample02
+AGCGTGTACTGTGCATGTCGATG</code></pre>
+<p>Each sequence can sometimes span multiple lines, and separate sequences can always be identified by the <code>&gt;</code> character. For example, this contains the same sequences as above:</p>
+<pre><code>&gt;sample01      &lt;-- FIRST SEQUENCE STARTS HERE
+AGCGTGTACTGT
+GCATGTCGATG
+&gt;sample02      &lt;-- SECOND SEQUENCE STARTS HERE
+AGCGTGTACTGT
+GCATGTCGATG</code></pre>
+<p>A useful trick to use on the command line is to count how many sequences there are in a FASTA file. Since each sequence name always starts with <code>&gt;</code> character, if we count the lines containing that character, that’s equivalent to counting how many sequences there are in the file. This can be achieved with the <code>grep</code> command:</p>
+<pre class="console"><code>grep -c "&gt;" sequences.fa</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="alignment-inference" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="alignment-inference"><span class="header-section-number">4.2</span> Alignment Inference</h2>
+<p>The simplest type of alignment is where only two sequences are aligned to each other, which we refer to as <strong>pairwise alignment</strong>. This is usually done using a dynamic programming algorithm, such as a the <a href="https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm">Needleman-Wunsch algorithm</a> (or a variation thereof).</p>
+<p>However, in most phylogenetic applications, we work with more than two sequences, in which case we need to perform a <strong>multiple sequence alignment (MSA)</strong>. Although the dynamic programming methods used for pairwise alignments can be generalised for multiple sequences, this is nonetheless a more computationally complex process. The computational challenge is greater, in particular, as we work with more and longer sequences (e.g.&nbsp;aligning millions of viral genomes, as was the case in the SARS-CoV-2/Covid19 pandemic).</p>
+<p>There are several methods to address the complexity of MSA. One common heuristic strategy to solve this challenge is to use a method known as <em>progressive alignment</em>:</p>
+<ul>
+<li>A <em>guide tree</em> is built from the sequences by using a simple clustering algorithm based on their sequence similarity (e.g.&nbsp;based on the number of shared sub-sequences). Note that this tree is not evolutionarily meaningful, its main purpose is to identify which sequences are more similar and therefore easier to align to each other.</li>
+<li>After the clustering step, the pair of sequences that is most similar (based on the guide tree) are aligned using a pairwise alignment algorithm. From this step on, the two aligned sequences are treated as one sequence (i.e.&nbsp;any gaps between them are treated as “fixed”).</li>
+<li>This previous step is then repeated until all sequences are added to the final MSA.</li>
+</ul>
+<p>One limitation of progressive alignment methods is that if an error occurs early in the alignment, this will affect the quality of the final MSA. To overcome this limitation, a strategy known as <em>iterative alignment</em> was developed. In this case, rather than considering alignments from previous steps of the algorithm as “fixed”, sequences can instead be re-aligned to improve the overall alignment score.</p>
+<p>Finally, it is noteworthy to mention <em>phylogeny-aware algorithms</em>. Most other methods heavily penalise gap insertions, which is desirable to avoid unecessarily complicated alignments, as exemplified earlier. However, this penalty may lead to incorrect alignments, as it ignores the evolutionary history of deletions and insertions between the samples being analysed. While for many applications this should not be a problem, if the purpose of the study is the inference of selection (e.g.&nbsp;estimating the rate between synonymous and non-synonymous mutations in protein-coding gene alignments), then mis-aligned sequences can lead to falsely infer positive selection due to overalignment. The tradeoff is that this is a substantially slower algorithm.</p>
+</section>
+<section id="msa-software" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="msa-software"><span class="header-section-number">4.3</span> MSA Software</h2>
+<p>There are many alignment software available, summarised in the table below. At short divergence, these typically give similar results. However, with highly divergent sequences, alignments can be very different between methods.</p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 45%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Software</th>
+<th style="text-align: left;">Algorithm Type</th>
+<th style="text-align: left;">Main Uses</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">Clustal</td>
+<td style="text-align: left;">progressive</td>
+<td style="text-align: left;">A popular and common algorithm, but mostly superseeded by more recent alternatives.</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">T-Coffee</td>
+<td style="text-align: left;">progressive</td>
+<td style="text-align: left;">Slower but more accurate than Clustal.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">MAFFT</td>
+<td style="text-align: left;">iterative/progressive</td>
+<td style="text-align: left;">Offers several algorithms, with tradeoffs between accuracy and speed.</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">MUSCLE</td>
+<td style="text-align: left;">iterative</td>
+<td style="text-align: left;">Comparative accuracy to MAFFT.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">PRANK</td>
+<td style="text-align: left;">phylogeny-aware</td>
+<td style="text-align: left;">Suitable for the inference of selection.</td>
+</tr>
+</tbody>
+</table>
+<section id="mafft" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="mafft"><span class="header-section-number">4.3.1</span> MAFFT</h3>
+<p>There is no clear consensus on which software is best, although <strong>MAFFT</strong> offers a good compromise between accuracy and speed (see <a href="https://mafft.cbrc.jp/alignment/software/eval/accuracy.html">their benchmarks</a>). This is partially because MAFFT offers the possibility of using <a href="https://mafft.cbrc.jp/alignment/software/algorithms/algorithms.html">different algorithms</a>, including faster (but less accurate) progressive alignment methods, as well as more accurate (but slower) iterative methods.</p>
+<p>The simplest use of the MAFFT program is as follows:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mafft</span> <span class="at">--auto</span> input.fasta <span class="op">&gt;</span> output.fasta</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>--auto</code> option lets MAFFT choose which of its algorithms to use, depending on the number and length of your sequences. If you want to use a specific algorithm, you can use different combinations of its options, as detailed in the <a href="https://mafft.cbrc.jp/alignment/software/manual/manual.html">manual page</a>.</p>
+</section>
+<section id="prank" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="prank"><span class="header-section-number">4.3.2</span> PRANK</h3>
+<p>Another noteworthy software is <strong>PRANK</strong>, which implements a <a href="http://wasabiapp.org/software/prank/prank_differences/"><em>phylogeny-aware algorithm</em></a>. Although slower than most methods, we would recommend using PRANK if the purpose of your study is to make inferences about selection pressures on coding sequences. The PRANK program can be used as:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">prank</span> <span class="at">-d</span><span class="op">=</span>input.fasta <span class="at">-o</span><span class="op">=</span>output</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>There are many other options that can be used with this program, which you can look at from its <a href="wasabiapp.org/software/prank/">online documentation</a> and help (<code>prank -help</code>).</p>
+</section>
+</section>
+<section id="reference-based-alignment" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="reference-based-alignment"><span class="header-section-number">4.4</span> Reference-based Alignment</h2>
+<p>A popular alternative to produce a MSA is to use a <em>reference-based alignment</em> approach. In this case each of our sequences is aligned to a “reference” sequence using a pairwise algorithm. This compulationally simplifies the problem of MSA, as we essentially reduce it to multiple pairwise alignments, without having to care about optimising the alignment across all sequences. This strategy is (much) faster than a full MSA, and is suitable when working with a large number of sequences that are not too diverged from each other (less than ~1% differences).</p>
+<p>A popular use-case for this approach is the alignment of multiple SARS-CoV-2 viral genomes. During the Covid19 pandemic, millions of consensus genomes were obtained for this virus due to the genomic surveillance efforts of public health institutions around the world. Aligning hundreds/thousands/millions of sequences using standard MSA algorithms would be prohibitively slow. However, because these viral sequences were all closely related, a reference-based alignment was a suitable approach.</p>
+<p>In MAFFT we can achieve this by using the <code>--addfragments</code> option:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mafft</span> <span class="at">--keeplength</span> <span class="at">--addfragments</span> input.fasta reference.fasta <span class="op">&gt;</span> output.fasta</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The meaning of the options used is:</p>
+<ul>
+<li><code>--addfragments input.fasta</code> is the FASTA file with the sequences we want to align.</li>
+<li>at the end of the command we give the reference genome that we want to align our sequences against.</li>
+<li><code>--keeplength</code> is optional. It keeps the length of the final alignment the same as the reference sequence. This is useful when aligning sequences against a reference genome, where we may want to keep the original coordinates to identify regions corresponding to specific genes, for example. What this means in practice is that insertions relative to the reference sequence are simply removed from the alignment (i.e.&nbsp;the reference sequence remains gap-free).</li>
+</ul>
+<p>Another useful option that can be used with MAFFT when aligning long sequences is <code>--maxambiguous X</code>, which will exclude sequences with more than <code>X</code> fraction of ambiguous bases (e.g.&nbsp;<code>--maxambiguous 0.2</code> would exclude sequences with more than 20% missing bases).</p>
+<p>See <a href="https://mafft.cbrc.jp/alignment/software/closelyrelatedviralgenomes.html">MAFFT’s tips page</a> for more information about this approach.</p>
+</section>
+<section id="which-method" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="which-method"><span class="header-section-number">4.5</span> Which Method?</h2>
+<p>There is no clear consensus regarding methods to “clean” alignments or to assess the confidence of different alignment regions.</p>
+<p>One way to assess the quality of an alignment is to compare the results of multiple alignment algorithms/programs. If a region is consistently aligned in the same way using different algorithms, we may be more confident that the alignment is correct. However, if different algorithms give us different results, then we may flag that region as more problematic. The <a href="https://tcoffee.crg.eu/apps/tcoffee/do:mcoffee">M-Coffee app</a>, freely available online, can perform this task, by assigning a “quality” score to each alignment column based on how consistent it is across a range of programs. We will see an example of this program in the exercises.</p>
+<p>Another way to assess the suitability of an alignment method to our data is to look at the literature to find what methods researchers in your field or application use (as we mentioned earlier for SARS-CoV-2). Alternatively, benchmark studies can provide an indication of the accuracy and speed of different algorithms (e.g.&nbsp;<a href="https://doi.org/10.1371/journal.pone.0018093">Thomson et al.&nbsp;2011</a> and the <a href="https://mafft.cbrc.jp/alignment/software/eval/accuracy.html">benchmarks from the MAFFT authors</a>).</p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Repetitive sequences
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>TODO: mention the challenge in aligning repetitive/hypervariable sequences.</p>
+<!-- 
+Maybe with some examples from hypervariable genes like major histocompatibility complex (MHC) in animals and self-incompatibility RNases in plants.
+
+- Could get some highly divergent (hypervariable) genes/proteins to illustrate how the alignment can get challenging. 
+  - E.g. self-incompatibility S-RNases
+    - paper: https://link.springer.com/article/10.1007/s00122-016-2754-7
+    - data: https://www.ncbi.nlm.nih.gov/protein/?term=Allelic+diversity+of+S-RNase+alleles+in+diploid+potato+species
+-->
+</div>
+</div>
+</section>
+<section id="protein-or-dna" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="protein-or-dna"><span class="header-section-number">4.6</span> Protein or DNA?</h2>
+<p>Nucleotide alignments are highly informative at short divergence times, but can be misleading at higher divergence due to saturation (i.e.&nbsp;positions mutating back to the same base over long divergence times).</p>
+<p>Amino acid alignments are preferred at high divergence, and can be used as a starting point to create a nucleotide alignment.</p>
+<p>Codon alignments can be useful for coding sequences, but are more computationally demanding. One possibility to solve this challenge is to produce a protein alignment first and then reverse-complement the alignment back to its cDNA sequence. However, this approach is limited if the original cDNA sequences contain frameshift mutations or early stop codons. Instead, using a dedicated codon-aware aligner is a better approach.</p>
+<p>The software MACSE provides this functionality, and can be used either from the command line or through a graphical user interface. A basic alignment can be done with:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">macse</span> <span class="at">-prog</span> alignSequences <span class="at">-seq</span> input.fasta <span class="at">-out_NT</span> output_NT.fasta <span class="at">-out_AA</span> output_AA.fasta</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The input, in this case, is our unaligned cDNA sequences. The program then generates two outputs: the aligned nucleotide sequences and the aligned (translated) amino acid sequences. Both of these can be visualised in AliView (see below). Note that MACSE uses the special character <code>!</code> to indicate that a <em>frameshift</em> is present in the alignment.</p>
+<!-- 
+- Are there tools to align protein but then reverse-transcribe back to DNA? (e.g. for selection inference)
+  - https://github.com/santiagosnchez/CodonAlign (python script)
+  - http://www.bork.embl.de/pal2nal/ (perl script)
+- Probably something like MACSE is better.
+- Selection inference examples:
+  - https://www.frontiersin.org/articles/10.3389/fgene.2018.00332/full
+  - also this SARS paper: https://www.frontiersin.org/articles/10.3389/fmicb.2020.550674/full
+  - tool for selection tests: https://stevenweaver.github.io/hyphy-site/methods/selection-methods/
+-->
+</section>
+<section id="alignment-visualisation" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="alignment-visualisation"><span class="header-section-number">4.7</span> Alignment Visualisation</h2>
+<p>We can visualise our alignment using the software <a href="https://ormbunkar.se/aliview/">AliView</a>, which is lightweight, fast and works on all major platforms (macOS, Linux and Windows). This makes it ideal for visualising both small and large alignments. Visualising the alignment can be useful, for example, to identify potentially mis-aligned regions (usually around indels).</p>
+<p>Here are some quick tips for using AliView:</p>
+<ul>
+<li>You can load an alignment by going to File &gt; Open</li>
+<li>You can zoom in/out of the alignment with <kbd>Ctrl</kbd> + mouse scroll wheel</li>
+<li>You can “scroll” horizontally by pressing <kbd>Shift</kbd> + mouse scroll wheel</li>
+<li>You can colour the alignment in different ways, using the buttons on the toolbar at the top</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/aliview.svg" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Example snapshot of the AliView program.</figcaption><p></p>
+</figure>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Missing data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Sometimes there are missing or ambiguous data in our DNA sequences. For completely missing bases we use the character <code>N</code> (meaning we could have any of the 4 bases). For other ambiguous cases (where two or three bases are possible) the convention is to use the <a href="https://en.wikipedia.org/wiki/International_Union_of_Pure_and_Applied_Chemistry#Amino_acid_and_nucleotide_base_codes">IUPAC notation</a>. For example, a <code>Y</code> would represent either <code>C</code> or <code>T</code>.</p>
+</div>
+</div>
+</section>
+<section id="exercises" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="exercises"><span class="header-section-number">4.8</span> Exercises</h2>
+<div class="callout-exercise callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Primate mtDNA alignment
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><font style="font-variant: small-caps">Level:</font> <i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><br></p>
+<p>Given a set of non-aligned sequences, let’s generate one or more alignments (to be completed…).</p>
+<div class="callout-answer callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Answer here</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout-exercise callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Darwin’s Finches
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><font style="font-variant: small-caps">Level:</font> <i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><br></p>
+<p>Darwin’s finches are a classic example of adaptive radiation (a quick formation of new species from a common ancestor). There are currently 18 recognised species endemic to the Galápagos Islands, and a study from <a href="https://doi.org/10.1073/pnas.96.9.5101">Sato et al.&nbsp;(1999)</a> aimed at clarifying their phylogenic relationships. To this end, they sequenced ~1kb of the mitochondrial control region (CR) from individuals from 13 species, to produce a molecular phylogeny.</p>
+<p>However, before a phylogeny is built, we need to produce a multiple sequence alignment.</p>
+<ol type="1">
+<li>Use MAFFT to align the sequences found in <code>data/finches/mitocr.fa</code> using the algorithm of your choice. Use the <code>--auto</code> option to let MAFFT decide which alignment algorithm to use. Save the output into <code>data/finches/mitocr_alignment.fa</code></li>
+<li>Answer the following questions, based on the message printed by <code>mafft</code> after finishing its run:
+<ul>
+<li>What algorithm was chosen?</li>
+<li>Looking at the help page from MAFFT (<code>mafft --help</code>) and its <a href="https://mafft.cbrc.jp/alignment/software/algorithms/algorithms.html">online documentation</a> why do you think this algorithm was chosen?</li>
+<li>Do you agree with this choice?</li>
+<li>What would have made you choose a different algorithm?</li>
+</ul></li>
+<li>Visualise the alignment using AliView. Where there any gaps or regions you think might be problematic in this alignment?</li>
+<li>Run the original FASTA file though the <a href="https://tcoffee.crg.eu/apps/tcoffee/do:mcoffee">M-Coffee app</a> and check if your quality concerns are warranted.</li>
+</ol>
+<div class="callout-answer callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Task 1</strong></p>
+<p>The command to produce the MSA is:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mafft</span> <span class="at">--auto</span> data/finches/mitocr.fa <span class="op">&gt;</span> results/finches/mitocr_alignment.fa</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+<p><strong>Task 2</strong></p>
+<p>After MAFFT runs, we are informed that the algorithm chosen was:</p>
+<pre><code>Strategy:
+ L-INS-i (Probably most accurate, very slow)
+ Iterative refinement method (&lt;16) with LOCAL pairwise alignment information</code></pre>
+<p>Looking at this message and the documentation online, it seems like this is one of the most accurate algorithms using an “iterative refinement method using both the WSP and consistency scores”. The <a href="https://mafft.cbrc.jp/alignment/software/eval/accuracy.html">benchmarks provided</a> by the MAFFT developers also support this as one of the most accurate methods.</p>
+<p>Given the relatively low number of samples, and the fact that they were relatively short (~1kbp), it seems sensible to choose one of the most accurate algorithms, as speed is not a concern in this case.</p>
+<p>From <code>mafft --help</code> we are told that if we have more than ~200 hundred sequences of length greater than ~2kb, then these algorithms may be too slow. Therefore, we may have chosen a different algorithm if working with more data and/or longer sequences (such as the SARS-CoV-2 samples in another exercise).</p>
+<hr>
+<p><strong>Task 3</strong></p>
+<p>We can visualise our alignment in AliView, which will reveal that there are some gaps, especially at the end of the alignment. This seems to be a relatively repetitive region, with streches of homopolymers (repeated nucleotides), making the alignment difficult.</p>
+<hr>
+<p><strong>Task 4</strong></p>
+<p>After uploading and running our FASTA file to M-Coffee, we indeed confirm that this terminal region is problematic, having overall lower agreement (score) between different alignment algorithms.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/finches_tcoffee.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Output from M-Coffee ran on the mitochondrial control region sequences from Sato et al.&nbsp;(1999). We only show the terminal region, where several homopolymeric stretches make the alignment more complicated.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 
+TODO
+Exercise for protein-based alignment that could later be used for selection-based analysis
+-->
+</section>
+<section id="summary" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.9</span> Summary</h2>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Key Points
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Molecular phylogenetics typically requires aligned sequences.</li>
+<li>Several methods and programs are available for sequence alignment and their use depends on the type of data and applications.
+<ul>
+<li>MAFFT is a general-purpose aligner, implementing both fast (but less acurate) and more accurate (but slower) algorithms.</li>
+<li>MAFFT also supports reference-based alignment, which is suitable when working with many sequences that are closely related to each other (less than ~1% divergence).</li>
+<li>PRANK is a phylogeny-aware aligner suitable for studying selection pressures on coding sequences.</li>
+</ul></li>
+<li>The AliView program can be used to visualise alignments stored as FASTA files.</li>
+<li>The M-Coffee program can be used to identify problematic regions of an alignment.</li>
+</ul>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../materials/01-foundations/00-foundations.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Molecular Phylogenetics - an Introduction</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+      <div class="nav-footer-center">Licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> <img src="https://creativecommons.org/images/deed/cc_icon_black_x2.png" class="img-fluid" width="25"> Bioinformatics Training Facility</div>
+  </div>
+</footer>
+
+
+
+</body></html>
